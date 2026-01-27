@@ -1,0 +1,8 @@
+# Dataset
+data/
+
+# Trained models
+checkpoints/*.pt
+
+# Cache
+__pycache__/
