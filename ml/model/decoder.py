@@ -1,6 +1,7 @@
 import torch
 import torch.nn as nn
-from ml.model.attention import Attention
+from model.attention import Attention
+
 
 class AttnLSTMDecoder(nn.Module):
     def __init__(self, vocab_size, enc_dim=512, hidden_dim=256):

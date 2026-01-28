@@ -1,0 +1,197 @@
+36_em_45.bmp	x + ( - x ) \geq 0 + ( - x )	complex
+18_em_22.bmp	p _ { 1 } ^ { \gamma _ { 1 } } p _ { 2 } ^ { \gamma _ { 2 } } \cdots p _ { n } ^ { \gamma _ { n } }	complex
+20_em_41.bmp	9 / 5	simple
+RIT_2014_176.bmp	1 8 z	simple
+RIT_2014_196.bmp	\int \sin ^ { 2 } x d x	complex
+31_em_176.bmp	( \frac { \pi } { \sqrt { 2 } } )	complex
+RIT_2014_146.bmp	a _ { 1 1 } a _ { 2 2 } - a _ { 1 2 } a _ { 2 _ { 1 } }	complex
+37_em_18.bmp	\frac { x \times x \times x \times x } { x \times x } = x \times x = x ^ { 2 }	complex
+502_em_7.bmp	\sum \limits _ { k = 1 } ^ { n } a _ { k } + \sum \limits _ { k = 1 } ^ { n } b _ { k }	complex
+20_em_40.bmp	\sqrt { 4 x ^ { 5 } + x }	complex
+23_em_66.bmp	z ^ { 3 } + z = z	complex
+RIT_2014_165.bmp	p _ { 1 } ^ { \beta _ { 1 } } p _ { 2 } ^ { \beta 2 } \ldots p _ { n } ^ { \beta n }	complex
+31_em_184.bmp	\frac { \sqrt { 8 1 } \times \sqrt { 2 } } { \sqrt { 1 0 0 } \times \sqrt { 2 } }	complex
+RIT_2014_24.bmp	\frac { n + 1 - 1 } { n + 1 } = \frac { n } { n + 1 }	complex
+RIT_2014_160.bmp	\sigma _ { a } , \sigma _ { m }	complex
+509_em_91.bmp	\mu < 6	simple
+501_em_16.bmp	N _ { X Y }	complex
+RIT_2014_163.bmp	\frac { 4 x ^ { 2 } - 9 } { 4 x ^ { 2 } + 1 2 x + 9 }	complex
+RIT_2014_60.bmp	3 x + 1 = A ( x + 1 ) + B x	complex
+34_em_249.bmp	\frac { 2 } { n \pi } ( 1 - \cos ( n \pi ) )	complex
+RIT_2014_167.bmp	\sqrt { c ^ { 2 } } = \sqrt { 8 1 0 0 0 0 + 5 6 2 5 0 0 }	complex
+26_em_89.bmp	x ^ { 2 } + y ^ { 2 } = l _ { 1 } ^ { 2 } + l _ { 2 } ^ { 2 } + 2 l _ { 1 } l _ { 2 } c _ { 2 }	complex
+511_em_272.bmp	\tan ( - \theta ) = - \tan \theta	medium
+35_em_14.bmp	x ^ { 3 } ( x - ( 2 x + 3 ) ( 2 x - 3 ) )	complex
+RIT_2014_149.bmp	\frac { \sin z } { z }	complex
+RIT_2014_234.bmp	\frac { 1 - \sqrt { 3 } } { 1 + \sqrt { 3 } }	complex
+31_em_189.bmp	x . y	simple
+519_em_450.bmp	z \rightarrow - z	simple
+513_em_312.bmp	( \cos \theta + i \sin \theta ) ^ { n } = \cos n \theta + i \sin n \theta	complex
+37_em_11.bmp	w ^ { - 2 }	complex
+31_em_193.bmp	r _ { i } + d r _ { i } , p _ { i } + d p _ { i }	complex
+RIT_2014_51.bmp	1 , 0 0 0 , 0 0 0 , 0 0 0	complex
+20_em_37.bmp	\frac { 3 \times 3 ^ { 2 } } { 2 } + \frac { 5 \times ( - 5 ) ^ { 2 } } { 2 } = \frac { 3 \times v _ { 1 } ^ { 2 } } { 2 } + \frac { 5 \times v _ { 2 } ^ { 2 } } { 2 }	complex
+501_em_15.bmp	\frac { 2 9 3 0 2 } { 7 5 8 0 3 } = \frac { 7 \times 7 \times 1 3 \times 4 6 } { 7 \times 7 \times 1 3 \times 1 1 9 } = \frac { 4 6 } { 1 1 9 }	complex
+RIT_2014_257.bmp	\frac { 1 1 } { 3 } \sqrt { 3 }	complex
+26_em_80.bmp	\frac { 3 1 9 } { 2 8 } = 1 1 . 3 9	complex
+36_em_47.bmp	7 0 ^ { o }	complex
+RIT_2014_205.bmp	\sigma _ { a } , \sigma _ { m }	complex
+511_em_264.bmp	( e ^ { 8 } - 9 ) / 9	complex
+RIT_2014_242.bmp	\{ a _ { 1 } , a _ { 2 } , a _ { 3 } , a _ { 4 } \}	complex
+37_em_31.bmp	M = E - e \sin E	medium
+28_em_146.bmp	\frac { 1 9 9 } { 1 1 }	complex
+512_em_280.bmp	3 . 0 0 0 0 0 0 0 3	medium
+RIT_2014_284.bmp	- 3 9	simple
+26_em_97.bmp	\sqrt { - 4 } = \sqrt { - 1 } \sqrt { 4 }	complex
+504_em_39.bmp	\frac { \sqrt { 2 7 } } { \sqrt [ 3 ] { 9 } }	complex
+501_em_18.bmp	\frac { 2 G M r - 2 r ^ { 3 } \pm r \sqrt { 4 r ^ { 4 } - 8 G M r ^ { 2 } + 4 G ^ { 2 } M ^ { 2 } - 4 r ^ { 4 } + 4 G M r ^ { 2 } } } { 2 ( r ^ { 2 } - G M ) }	complex
+34_em_225.bmp	x ^ { 3 } + 3 x ^ { 2 } y + 3 x y ^ { 2 } + y ^ { 3 }	complex
+503_em_30.bmp	\frac { - 6 x } { - 6 } < \frac { 1 8 } { - 6 }	complex
+RIT_2014_52.bmp	\int x + 5 d x	complex
+23_em_61.bmp	\cos 2 \alpha	simple
+501_em_0.bmp	\int \frac { 1 } { ( a x ^ { 2 } + b x + c ) ^ { n } } d x	complex
+29_em_157.bmp	y = y \prime	simple
+517_em_401.bmp	x ( t ) = x _ { 0 } ( t )	complex
+RIT_2014_140.bmp	\sum a _ { n }	complex
+RIT_2014_3.bmp	d = \frac { 2 r \tan a \tan b } { \tan a + \tan b }	complex
+26_em_81.bmp	- 2 x + \sin ( 2 x + 2 ) - 2	complex
+20_em_28.bmp	1 . 3 7 9 1 9 4 1 7 1	medium
+36_em_38.bmp	2 4 \pi	simple
+RIT_2014_86.bmp	\frac { x ( 7 ) - x ( 2 ) } { 7 - 2 }	complex
+RIT_2014_49.bmp	a _ { j } ^ { \gamma _ { j } } a _ { j + 1 } ^ { \gamma _ { j _ { + 1 } } }	complex
+RIT_2014_156.bmp	- 1	simple
+37_em_27.bmp	\alpha , \beta	simple
+23_em_73.bmp	B _ { m + 1 }	complex
+512_em_294.bmp	4 x = x + x + x + x	medium
+502_em_8.bmp	\int \limits _ { - \infty } ^ { \infty } e ^ { - w ^ { 2 } } d w = \sqrt { \pi }	complex
+515_em_368.bmp	I m	simple
+513_em_320.bmp	k N	simple
+26_em_76.bmp	- m p	simple
+29_em_167.bmp	\cos ( n x ) = 2 \cos ( x ) \cos [ ( n - 1 ) x ] - \cos [ ( n - 2 ) x ]	complex
+515_em_367.bmp	( \tan x - 3 ) ( \tan x + 1 ) = 0	complex
+RIT_2014_297.bmp	( z + 1 ) ( z + 2 )	medium
+513_em_321.bmp	q _ { 1 } , q _ { 2 } , \ldots , q _ { m }	complex
+RIT_2014_22.bmp	3 . 0 0 0 0 0 0 0 1	medium
+27_em_118.bmp	\sqrt { 3 2 } + \sqrt { 3 2 }	complex
+515_em_357.bmp	x _ { i } \leq x \leq x _ { i + 1 }	complex
+503_em_33.bmp	\mu _ { e f f } = \mu _ { 0 } \mu _ { r }	complex
+RIT_2014_141.bmp	u d u = - \frac { d y } { 2 y ^ { 2 } }	complex
+18_em_3.bmp	q _ { 1 } , q _ { 2 } , \ldots , q _ { m }	complex
+RIT_2014_161.bmp	x ^ { 2 } y ^ { 3 } + 2 x ^ { 2 } y + 4 x y ^ { 3 } + 8 x y	complex
+RIT_2014_64.bmp	a b \sin \alpha	simple
+504_em_40.bmp	2 ^ { n - 1 } + 2 ^ { n - 2 } \cdots 2 + 1 = 2 ^ { n } - 1	complex
+RIT_2014_306.bmp	( a + b ) u = a u + b v	medium
+35_em_24.bmp	\sqrt { ( \frac { \Delta x } { x } ) ^ { 2 } + ( \frac { \Delta y } { y } ) ^ { 2 } }	complex
+519_em_459.bmp	1 = \frac { Y } { Y }	complex
+514_em_345.bmp	\frac { \pm \infty } { \pm \infty }	complex
+31_em_187.bmp	5 0	simple
+RIT_2014_200.bmp	\lim \limits _ { n \rightarrow \infty } y _ { n } = 0	complex
+RIT_2014_294.bmp	- | y | \leq y \leq | y |	medium
+RIT_2014_243.bmp	\sum \limits _ { n = 5 } ^ { 1 0 } ( 2 _ { n } + 1 )	complex
+29_em_161.bmp	f ( z _ { 0 } ) = \lim \limits _ { z \rightarrow z _ { 0 } } f ( z )	complex
+RIT_2014_219.bmp	m / q	simple
+506_em_61.bmp	\sqrt { \sqrt { \sqrt { 4 ^ { 4 ! } } } }	complex
+510_em_103.bmp	\int x \sin x d x	complex
+RIT_2014_283.bmp	s = 2 5 8 5 7	medium
+506_em_60.bmp	b a g _ { 1 }	complex
+502_em_5.bmp	z = \cos \theta + j \sin \theta	medium
+RIT_2014_224.bmp	\pm \frac { 0 . 0 5 } { 5 0 } = \pm 0 . 0 0 1	complex
+508_em_81.bmp	c _ { 1 } + c _ { 2 } + c _ { 3 }	complex
+37_em_8.bmp	\tan ( 3 x ) = \frac { 3 \tan ( x ) - \tan ^ { 3 } ( x ) } { 1 - 3 \tan ^ { 2 } ( x ) }	complex
+505_em_48.bmp	( a - x ) ( d - x ) - b c = x ^ { 2 } - ( a + d ) x + ( a d - b c )	complex
+502_em_15.bmp	\theta _ { i + 1 } = \theta _ { i } - \alpha _ { i }	complex
+512_em_282.bmp	\sqrt [ 3 ] { x ^ { 2 } }	complex
+513_em_301.bmp	\sin ( - B ) = - \sin B	medium
+37_em_19.bmp	- \frac { \sqrt { 2 - \sqrt { 2 } } } { 2 }	complex
+520_em_465.bmp	h ( s ) = \frac { 1 } { 1 + s T }	complex
+502_em_23.bmp	0 + 0 + 0 + 0 + 0 + 0 = 0	complex
+RIT_2014_113.bmp	\int \sin ( x ) \sin ( 2 x ) d x	complex
+RIT_2014_124.bmp	\pi e \sqrt { x }	complex
+514_em_347.bmp	r = \lim \frac { | a _ { n } | } { | a _ { n + 1 } | }	complex
+509_em_93.bmp	| S |	simple
+RIT_2014_68.bmp	e ^ { - t } \cos 2 ^ { t }	complex
+RIT_2014_268.bmp	\int \frac { 1 } { x } \sqrt { \frac { 1 - x } { x } } d x	complex
+26_em_84.bmp	S _ { \infty } = \lim \limits _ { n \rightarrow \infty } \frac { a ( 1 - r ^ { n } ) } { 1 - r } = \frac { a } { 1 - r }	complex
+20_em_31.bmp	X X ^ { - 1 } = X ^ { - 1 } X = I	complex
+504_em_37.bmp	| y _ { 2 } - y _ { 1 } |	complex
+RIT_2014_129.bmp	\int \limits _ { 2 } ^ { b } f d \alpha	complex
+513_em_311.bmp	1 0 ^ { \frac { 1 } { 1 0 } }	complex
+RIT_2014_35.bmp	\theta + c	simple
+RIT_2014_216.bmp	\lim \limits _ { y \rightarrow x } f ( y ) = f ( x )	complex
+34_em_239.bmp	\Delta x \Delta k \geq 1 / 2	medium
+503_em_28.bmp	y ^ { \frac { 1 } { b } } \leq x ^ { \frac { 1 } { b } }	complex
+32_em_210.bmp	\frac { 1 - 2 p } { \sqrt { n p ( 1 - p ) } }	complex
+34_em_241.bmp	\phi ( \phi ( n ) )	medium
+RIT_2014_212.bmp	t _ { 0 } \leq t \leq b	complex
+515_em_363.bmp	\frac { d _ { 2 } } { d _ { 2 } - 2 }	complex
+501_em_6.bmp	f ( 1 . 9 9 9 9 9 ) = 3 . 9 9 9 9 9	complex
+514_em_334.bmp	\sum \limits _ { n = 1 } ^ { 1 0 } ( 2 n + 1 ) - \sum \limits _ { n = 1 } ^ { 4 } ( 2 n + 1 )	complex
+34_em_230.bmp	( a + b ) ^ { 2 } = a ^ { 2 } + 2 a b + b ^ { 2 }	complex
+RIT_2014_12.bmp	k _ { n + 1 } = n ^ { 2 } + k _ { n } ^ { 2 } - k _ { n - 1 }	complex
+32_em_202.bmp	3 N - 3 - 2 = 3 N - 5	medium
+RIT_2014_88.bmp	\frac { 4 + 4 } { 4 + 4 }	complex
+RIT_2014_106.bmp	\sin 6 \theta	simple
+RIT_2014_197.bmp	k _ { i } = \frac { x _ { i } } { \sum x _ { i } }	complex
+RIT_2014_40.bmp	c o d	simple
+514_em_340.bmp	- 1 0 0 1 y = - 9 9 9	medium
+27_em_103.bmp	\exists y \exists x F	simple
+517_em_400.bmp	\frac { a + b } { 2 }	complex
+501_em_19.bmp	\tan ( 5 x ) = \frac { 5 \tan ( x ) - 1 0 \tan ^ { 3 } ( x ) + \tan ^ { 5 } ( x ) } { 1 - 1 0 \tan ^ { 2 } ( x ) + 5 \tan ^ { 4 } ( x ) }	complex
+513_em_317.bmp	\frac { 7 x } { 7 } = \frac { 1 4 } { 7 }	complex
+502_em_24.bmp	6 1 \leq x \leq 6 9	medium
+RIT_2014_136.bmp	F _ { 1 } , \ldots , F _ { k }	complex
+519_em_443.bmp	1 2 1 = 1 x 1 0 ^ { 2 } + 2 x 1 0 ^ { 1 } + 1 x 1 0 ^ { 0 } = 1 0 0 + 2 0 + 1	complex
+31_em_181.bmp	\frac { a z ^ { - 1 } } { ( 1 - a z ^ { - 1 } ) ^ { 2 } }	complex
+RIT_2014_296.bmp	\theta + e \alpha	simple
+20_em_35.bmp	\mu \geq 0	simple
+518_em_414.bmp	\lim \limits _ { z \rightarrow z _ { 0 } } f ( z ) = f ( z _ { 0 } )	complex
+509_em_90.bmp	\pm \sqrt { 6 }	complex
+36_em_43.bmp	( x ^ { \prime } , t ^ { \prime } )	complex
+18_em_1.bmp	\sqrt { 4 8 }	complex
+514_em_335.bmp	\frac { \sqrt { 2 - \sqrt { 2 } } } { 2 }	complex
+RIT_2014_76.bmp	t \rightarrow \infty	simple
+RIT_2014_99.bmp	\frac { 1 } { 9 }	complex
+37_em_14.bmp	\lim \limits _ { x \rightarrow 0 } f ( x ) = 0	complex
+RIT_2014_171.bmp	\frac { ( ( j ) ) ( ( j ) + 1 ) } { 2 } + ( j + 1 )	complex
+28_em_126.bmp	\frac { \sum \limits _ { k = 1 } ^ { N } k ^ { 2 } } { a }	complex
+28_em_145.bmp	f ( x ) = \frac { \infty } { \infty }	complex
+29_em_164.bmp	\cos \pi z	simple
+20_em_29.bmp	( - \infty , \infty )	medium
+519_em_458.bmp	\frac { a c + b } { c }	complex
+512_em_277.bmp	a b ^ { 2 } + a ( b - c ) - b c ^ { 2 }	complex
+32_em_213.bmp	\sqrt { a } \times \sqrt { b } = \sqrt { a b }	complex
+RIT_2014_162.bmp	\frac { \sum \limits _ { i = 0 } ^ { m } b ^ { i } s ^ { i } } { \sum \limits _ { i = 0 } ^ { n } a ^ { i } s ^ { i } }	complex
+RIT_2014_220.bmp	x ^ { n - 1 } + x ^ { n - 2 } + \ldots + x ^ { 2 } + x + 1	complex
+31_em_191.bmp	\sum \limits _ { j = 1 } ^ { m } a _ { j } e _ { j }	complex
+RIT_2014_261.bmp	d \neq 0	simple
+29_em_158.bmp	\alpha ^ { 4 } + \alpha ^ { 6 } + \alpha ^ { 7 } + \alpha ^ { 9 }	complex
+503_em_29.bmp	\sin \phi + c	simple
+31_em_198.bmp	\lim \limits _ { x \rightarrow - \infty } p _ { 2 } ( x ) > 0	complex
+513_em_304.bmp	\pi d = 2 \pi r	medium
+RIT_2014_43.bmp	z ^ { d } + z = z	complex
+RIT_2014_301.bmp	1 + 1 = 2 [ \frac { 1 ( 1 + 1 ) } { 2 } ] ^ { 9 } = 2	complex
+31_em_190.bmp	\frac { 1 } { 2 5 } y ^ { 2 } - \frac { 8 } { 2 5 } y	complex
+511_em_273.bmp	x = \beta	simple
+31_em_192.bmp	\int \limits _ { a } ^ { x } f ( x ) d x	complex
+18_em_0.bmp	x _ { k } x x _ { k } + y _ { k } y x _ { k }	complex
+514_em_333.bmp	\beta _ { n + 1 }	complex
+519_em_440.bmp	\frac { 8 9 9 3 } { 7 8 7 3 }	complex
+516_em_378.bmp	5 j + 3 j	simple
+516_em_383.bmp	r ( x )	simple
+RIT_2014_264.bmp	\frac { 3 8 \sqrt { 9 x - 3 8 } } { 9 } + C	complex
+20_em_45.bmp	\sqrt { C _ { n } }	complex
+34_em_247.bmp	( \sum \limits _ { k = 1 } ^ { n } a _ { k } ) ^ { \frac { 1 } { 2 } } \leq \sum \limits _ { k = 1 } ^ { n } a _ { k } ^ { \frac { 1 } { 2 } }	complex
+26_em_75.bmp	1 - 2 a + b - 2 a b = 1 - 2 b + a - 2 a b	complex
+520_em_466.bmp	\lambda ( t ) = \lambda _ { 0 } ( 1 - e ^ { - \frac { t } { \lambda } } )	complex
+RIT_2014_7.bmp	\frac { 4 x ^ { 3 } } { 3 } + \frac { 1 1 x ^ { 4 } } { 4 } + C	complex
+RIT_2014_61.bmp	0 . 0 8 7 8	medium
+29_em_159.bmp	1 8	simple
+RIT_2014_248.bmp	\frac { 2 - p } { \sqrt { 1 - p } }	complex
+512_em_283.bmp	x ^ { 2 } + 2 x y + y ^ { 2 } = ( x + y ) ^ { 2 }	complex
+RIT_2014_304.bmp	\lim \limits _ { x \rightarrow - \infty } P _ { k + 1 } ( x ) < 0	complex
+RIT_2014_117.bmp	\frac { 1 } { [ ( k + 1 ) \pi ] }	complex
+510_em_107.bmp	\sqrt { a b } = \sqrt { a } \sqrt { b }	complex
+37_em_3.bmp	t - 6	simple
+18_em_8.bmp	x _ { L L L } \leq x _ { L L }	complex
+28_em_131.bmp	z y + 2 z y + 2 z + 2 y	medium
+35_em_2.bmp	( x + 2 y ) ( x ^ { 2 } - 2 x y + 4 y ^ { 2 } )	complex

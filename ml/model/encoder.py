@@ -1,5 +1,7 @@
 import torch.nn as nn
 from torchvision import models
+from model.attention import Attention
+
 
 class CNNEncoder(nn.Module):
     def __init__(self):

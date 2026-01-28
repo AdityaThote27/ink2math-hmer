@@ -1,13 +1,15 @@
 import torch
 import torch.nn as nn
-from ml.model.encoder import CNNEncoder
-from ml.model.decoder import AttnLSTMDecoder
+from model.encoder import CNNEncoder
+from model.decoder import AttnLSTMDecoder
+
 
 class HMERModel(nn.Module):
     def __init__(self, vocab_size, hidden_dim=256):
         super().__init__()
         self.encoder = CNNEncoder()
         self.decoder = AttnLSTMDecoder(vocab_size)
+
 
         self.init_h = nn.Linear(512, hidden_dim)
         self.init_c = nn.Linear(512, hidden_dim)
