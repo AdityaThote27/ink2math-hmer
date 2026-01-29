@@ -1,7 +1,7 @@
 import torch
 import torch.nn as nn
-from model.encoder import CNNEncoder
-from model.decoder import AttnLSTMDecoder
+from models.cnn_lstm.encoder import CNNEncoder
+from models.cnn_lstm.decoder import AttnLSTMDecoder
 
 
 class HMERModel(nn.Module):

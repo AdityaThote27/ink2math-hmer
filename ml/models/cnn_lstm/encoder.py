@@ -1,6 +1,6 @@
 import torch.nn as nn
 from torchvision import models
-from model.attention import Attention
+from models.cnn_lstm.attention import Attention
 
 
 class CNNEncoder(nn.Module):

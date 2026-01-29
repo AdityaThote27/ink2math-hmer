@@ -4,10 +4,9 @@ import torch.nn as nn
 import torch.optim as optim
 from torch.utils.data import DataLoader
 from torch.nn.utils.rnn import pad_sequence
-
-from ml.dataset.crohme_dataset import CROHMEDataset
-from ml.tokenizer import Tokenizer
-from ml.model.hmer_model import HMERModel
+from dataset.crohme_dataset import CROHMEDataset
+from tokenizer import Tokenizer
+from models.cnn_lstm.hmer_model import HMERModel
 
 # --------------------------------------------------
 # Device

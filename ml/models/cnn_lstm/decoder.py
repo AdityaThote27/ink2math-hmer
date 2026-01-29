@@ -1,6 +1,6 @@
 import torch
 import torch.nn as nn
-from model.attention import Attention
+from models.cnn_lstm.attention import Attention
 
 
 class AttnLSTMDecoder(nn.Module):
