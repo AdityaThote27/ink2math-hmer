@@ -6,3 +6,14 @@ checkpoints/*.pt
 
 # Cache
 __pycache__/
+
+# Model checkpoints
+*.pth
+
+# Results / outputs
+*.csv
+ml/results/
+
+# Temporary test scripts
+test_*.py
+

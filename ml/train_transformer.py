@@ -1,3 +1,4 @@
+import os
 import torch
 import torch.nn as nn
 import torch.optim as optim
@@ -43,15 +44,18 @@ def ctc_collate_fn(batch):
     images = torch.stack(images)  # (B, 1, H, W)
 
     # Encode labels
-    encoded = [torch.tensor(tokenizer.encode(lbl), dtype=torch.long)
-               for lbl in labels]
+    encoded = [
+        torch.tensor(tokenizer.encode(lbl), dtype=torch.long)
+        for lbl in labels
+    ]
 
     target_lengths = torch.tensor(
         [len(t) for t in encoded],
         dtype=torch.long
     )
 
-    targets = torch.cat(encoded)  # 1D tensor
+    # CTC requires targets as a 1D tensor
+    targets = torch.cat(encoded)
 
     return images, targets, target_lengths
 
@@ -61,7 +65,7 @@ def ctc_collate_fn(batch):
 # --------------------------------------------------
 train_loader = DataLoader(
     train_dataset,
-    batch_size=2,          # keep small for CPU
+    batch_size=2,      # small batch for CPU sanity check
     shuffle=True,
     num_workers=0,
     collate_fn=ctc_collate_fn
@@ -73,7 +77,7 @@ train_loader = DataLoader(
 # --------------------------------------------------
 model = HMERTransformer(
     num_classes=num_classes,
-    img_height=256,   # matches your dataset resize
+    img_height=256,   # MUST stay fixed (positional encoding)
     img_width=256,
     embed_dim=256,
     num_heads=8,
@@ -89,11 +93,11 @@ optimizer = optim.Adam(model.parameters(), lr=1e-4)
 
 
 # --------------------------------------------------
-# Training Loop (Sanity First)
+# Training Loop (Sanity Check)
 # --------------------------------------------------
 model.train()
 
-for epoch in range(1):  # 1 epoch for sanity check
+for epoch in range(25):  # 1 epoch = sanity check
     print(f"\nEpoch {epoch + 1}")
 
     for batch_idx, (images, targets, target_lengths) in enumerate(train_loader):
@@ -104,13 +108,12 @@ for epoch in range(1):  # 1 epoch for sanity check
         optimizer.zero_grad()
 
         # Forward pass
-        logits = model(images)
-        # logits shape: (seq_len, batch, num_classes)
+        logits, seq_len = model(images)
+        # logits: (seq_len, batch, num_classes)
 
         log_probs = logits.log_softmax(dim=2)
 
-        seq_len, batch_size, _ = log_probs.shape
-
+        batch_size = log_probs.size(1)
         input_lengths = torch.full(
             size=(batch_size,),
             fill_value=seq_len,
@@ -135,4 +138,24 @@ for epoch in range(1):  # 1 epoch for sanity check
             print("✅ Transformer + CTC sanity check passed")
             break
 
+
+# --------------------------------------------------
+# Save Model & Tokenizer (🔥 CRITICAL)
+# --------------------------------------------------
+os.makedirs("ml/models/cnn_transformer", exist_ok=True)
+
+# Save model weights
+torch.save(
+    model.state_dict(),
+    "ml/models/cnn_transformer/transformer_ctc.pth"
+)
+
+# Save tokenizer vocab (stoi)
+torch.save(
+    tokenizer.stoi,
+    "ml/models/cnn_transformer/tokenizer_stoi.pth"
+)
+
+print("✅ Transformer checkpoint saved")
+print("✅ Tokenizer vocab saved")
 print("🚀 Training script finished")

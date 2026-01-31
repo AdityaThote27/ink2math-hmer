@@ -28,13 +28,12 @@ class HMERTransformer(nn.Module):
         # 1️⃣ CNN Backbone
         self.cnn = CNNBackbone(in_channels=1, out_channels=embed_dim)
 
-        # Compute feature map size after CNN
         # CNN downsamples by factor of 8 (3 MaxPools)
         self.feature_h = img_height // 8
         self.feature_w = img_width // 8
         self.seq_len = self.feature_h * self.feature_w
 
-        # 2️⃣ Positional Encoding (2D)
+        # 2️⃣ 2D Positional Encoding
         self.positional_encoding = PositionalEncoding2D(
             embed_dim=embed_dim,
             height=self.feature_h,
@@ -53,39 +52,43 @@ class HMERTransformer(nn.Module):
         # 4️⃣ Output projection (CTC-ready)
         self.classifier = nn.Linear(embed_dim, num_classes)
 
-    def forward(self, x):
+    def forward(self, x, return_log_probs=False):
         """
         Args:
             x: (batch, 1, H, W)
+            return_log_probs: bool (for CTC loss / decoding)
 
         Returns:
-            logits: (seq_len, batch, num_classes)
-                    → required format for nn.CTCLoss
+            logits or log_probs: (seq_len, batch, num_classes)
+            seq_len: int (needed for CTC inference)
         """
 
-        # CNN feature extraction
-        features = self.cnn(x)  
+        # 🔹 CNN feature extraction
+        features = self.cnn(x)
         # (B, C, H', W')
 
         B, C, H, W = features.shape
 
-        # Flatten spatial dimensions → tokens
+        # 🔹 Flatten spatial grid → token sequence
         features = features.permute(0, 2, 3, 1)       # (B, H', W', C)
         features = features.contiguous().view(B, H * W, C)
         # (B, seq_len, embed_dim)
 
-        # Add 2D positional encoding
+        # 🔹 Add 2D positional encoding
         features = self.positional_encoding(features)
 
-        # Transformer encoder
+        # 🔹 Transformer encoding
         encoded = self.transformer(features)
         # (B, seq_len, embed_dim)
 
-        # Project to symbol logits
+        # 🔹 Project to symbol logits
         logits = self.classifier(encoded)
         # (B, seq_len, num_classes)
 
-        # CTC expects (seq_len, batch, num_classes)
+        # 🔹 CTC expects (seq_len, batch, num_classes)
         logits = logits.permute(1, 0, 2)
 
-        return logits
+        if return_log_probs:
+            logits = torch.log_softmax(logits, dim=2)
+
+        return logits, logits.size(0)
