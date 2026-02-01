@@ -3,8 +3,14 @@ import math
 from collections import defaultdict
 
 
+# --------------------------------------------------
+# Greedy CTC Decode (baseline)
+# --------------------------------------------------
 def ctc_greedy_decode(logits, idx_to_token, blank_idx=0):
-    preds = torch.argmax(logits, dim=2)  # [T, B]
+    """
+    logits: (T, B, C) log-probabilities
+    """
+    preds = torch.argmax(logits, dim=2)  # (T, B)
     decoded_sequences = []
 
     for b in range(preds.size(1)):
@@ -21,13 +27,14 @@ def ctc_greedy_decode(logits, idx_to_token, blank_idx=0):
 
 
 # --------------------------------------------------
-# CTC Prefix Beam Search (KEY UPGRADE)
+# CTC Beam Search Decode (LENGTH-AWARE)
 # --------------------------------------------------
 def ctc_beam_search_decode(
     logits,
     idx_to_token,
     beam_width=5,
-    blank_idx=0
+    blank_idx=0,
+    length_bonus=0.15
 ):
     """
     logits: (T, B, C) log-probabilities
@@ -40,7 +47,8 @@ def ctc_beam_search_decode(
     for b in range(B):
         log_probs = logits[:, b, :]  # (T, C)
 
-        beams = {(): 0.0}  # prefix -> log prob
+        # prefix (tuple of token ids) -> score
+        beams = {(): 0.0}
 
         for t in range(T):
             new_beams = defaultdict(lambda: -math.inf)
@@ -48,28 +56,39 @@ def ctc_beam_search_decode(
             for prefix, score in beams.items():
                 for c in range(C):
                     p = log_probs[t, c].item()
+
+                    # Blank token: no length bonus
                     if c == blank_idx:
                         new_beams[prefix] = max(
                             new_beams[prefix],
                             score + p
                         )
                     else:
+                        # Non-blank token: reward sequence extension
                         new_prefix = prefix + (c,)
                         new_beams[new_prefix] = max(
                             new_beams[new_prefix],
-                            score + p
+                            score + p + length_bonus
                         )
 
-            # keep top beams
+            # Keep top-K beams
             beams = dict(
-                sorted(new_beams.items(), key=lambda x: x[1], reverse=True)
-                [:beam_width]
+                sorted(
+                    new_beams.items(),
+                    key=lambda x: x[1],
+                    reverse=True
+                )[:beam_width]
             )
 
-        # choose best beam
-        best_prefix = max(beams.items(), key=lambda x: x[1])[0]
+        # Best scoring prefix
+        # Prefer non-empty sequences if scores are close
+        best_prefix = max(
+            beams.items(),
+            key=lambda x: (len(x[0]) > 0, x[1])
+        )[0]
 
-        # collapse repeats + remove blanks
+
+        # Collapse repeats and remove blanks
         decoded = []
         prev = None
         for token in best_prefix:

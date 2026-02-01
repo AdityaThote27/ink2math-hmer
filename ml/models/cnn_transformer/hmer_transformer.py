@@ -56,11 +56,11 @@ class HMERTransformer(nn.Module):
         """
         Args:
             x: (batch, 1, H, W)
-            return_log_probs: bool (for CTC loss / decoding)
+            return_log_probs: bool
 
         Returns:
             logits or log_probs: (seq_len, batch, num_classes)
-            seq_len: int (needed for CTC inference)
+            seq_lens: (batch,) tensor for CTC
         """
 
         # 🔹 CNN feature extraction
@@ -91,4 +91,12 @@ class HMERTransformer(nn.Module):
         if return_log_probs:
             logits = torch.log_softmax(logits, dim=2)
 
-        return logits, logits.size(0)
+        # 🔹 Sequence length per sample (CTC-safe)
+        seq_lens = torch.full(
+            size=(B,),
+            fill_value=logits.size(0),
+            dtype=torch.long,
+            device=logits.device
+        )
+
+        return logits, seq_lens
