@@ -1,16 +1,14 @@
 # Virtual environment
 venv/
 
+# Model weights
+*.pth
+
+# Data
+data/
+ml/dataset/synthetic_digits/
+ml/dataset/synthetic_digits_binary/
+
 # Python cache
 __pycache__/
 *.pyc
-
-# Outputs (images)
-backend/outputs/
-
-# Environment variables
-.env
-
-# OS files
-.DS_Store
-Thumbs.db
