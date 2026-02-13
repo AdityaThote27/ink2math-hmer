@@ -1,0 +1,12 @@
+api_backend/venv/
+api_backend/static/*.pdf
+api_backend/static/*.docx
+api_backend/static/*.txt
+__pycache__/
+
+venv/
+__pycache__/
+static/
+*.mp3
+*.pdf
+*.docx
