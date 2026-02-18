@@ -7,6 +7,14 @@ import ImageUploadPanel from "./components/ImageUploadPanel";
 import DrawCanvasPanel from "./components/DrawCanvasPanel";
 import ResultPanel from "./components/ResultPanel";
 import ExportPanel from "./components/ExportPanel";
+import MiniAssistant from "./components/MiniAssistant";
+
+
+import HeroSection from "./layout/HeroSection";
+import SolverLayout from "./layout/SolverLayout";
+import ResultsLayout from "./layout/ResultsLayout";
+import ExportLayout from "./layout/ExportLayout";
+import Footer from "./layout/Footer";
 
 import "./styles.css";
 
@@ -22,9 +30,6 @@ function App() {
   const mediaRecorderRef = useRef(null);
   const chunksRef = useRef([]);
 
-  // =============================
-  // TEXT SOLVE
-  // =============================
   const solveEquation = async () => {
     if (!equation) return;
 
@@ -34,16 +39,13 @@ function App() {
         expression: equation,
       });
       setResult(response.data);
-    } catch (error) {
+    } catch {
       alert("Text solve failed.");
     } finally {
       setLoading(false);
     }
   };
 
-  // =============================
-  // VOICE SOLVE
-  // =============================
   const startRecording = async () => {
     const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
     const mediaRecorder = new MediaRecorder(stream);
@@ -57,7 +59,6 @@ function App() {
 
     mediaRecorder.onstop = async () => {
       const blob = new Blob(chunksRef.current, { type: "audio/webm" });
-
       const formData = new FormData();
       formData.append("file", blob);
 
@@ -85,9 +86,6 @@ function App() {
     setRecording(false);
   };
 
-  // =============================
-  // IMAGE SOLVE
-  // =============================
   const solveFromImage = async (file) => {
     const formData = new FormData();
     formData.append("file", file);
@@ -107,9 +105,6 @@ function App() {
     }
   };
 
-  // =============================
-  // DRAW SOLVE
-  // =============================
   const solveFromDrawing = async (blob) => {
     const formData = new FormData();
     formData.append("file", blob);
@@ -130,69 +125,46 @@ function App() {
   };
 
   return (
-    <div className="container">
-      <h1>Ink2Math AI Assistant</h1>
+    <div className="app-wrapper">
+      <HeroSection />
 
-      {/* TABS */}
-      <div className="tabs">
-        <button
-          className={activeTab === "text" ? "active" : ""}
-          onClick={() => setActiveTab("text")}
-        >
-          Text
-        </button>
+      <MiniAssistant
+        setActiveTab={setActiveTab}
+        solveEquation={solveEquation}
+        result={result}
+      />
 
-        <button
-          className={activeTab === "voice" ? "active" : ""}
-          onClick={() => setActiveTab("voice")}
-        >
-          Voice
-        </button>
 
-        <button
-          className={activeTab === "image" ? "active" : ""}
-          onClick={() => setActiveTab("image")}
-        >
-          Image
-        </button>
+      <SolverLayout
+        activeTab={activeTab}
+        setActiveTab={setActiveTab}
+        equation={equation}
+        setEquation={setEquation}
+        solveEquation={solveEquation}
+        recording={recording}
+        startRecording={startRecording}
+        stopRecording={stopRecording}
+        solveFromImage={solveFromImage}
+        solveFromDrawing={solveFromDrawing}
+        loading={loading}
+        InputPanel={InputPanel}
+        VoiceControls={VoiceControls}
+        ImageUploadPanel={ImageUploadPanel}
+        DrawCanvasPanel={DrawCanvasPanel}
+      />
 
-        <button
-          className={activeTab === "draw" ? "active" : ""}
-          onClick={() => setActiveTab("draw")}
-        >
-          Draw
-        </button>
-      </div>
+      <ResultsLayout result={result} ResultPanel={ResultPanel} />
+      <ExportLayout result={result} ExportPanel={ExportPanel} />
 
-      {/* TAB CONTENT */}
-      {activeTab === "text" && (
-        <InputPanel
-          equation={equation}
-          setEquation={setEquation}
-          onSolve={solveEquation}
-        />
-      )}
+      <MiniAssistant
+        setActiveTab={setActiveTab}
+        onSolve={solveEquation}
+        result={result}
+      />
 
-      {activeTab === "voice" && (
-        <VoiceControls
-          recording={recording}
-          onStart={startRecording}
-          onStop={stopRecording}
-        />
-      )}
 
-      {activeTab === "image" && (
-        <ImageUploadPanel onSolveImage={solveFromImage} />
-      )}
 
-      {activeTab === "draw" && (
-        <DrawCanvasPanel onSolveDraw={solveFromDrawing} />
-      )}
-
-      {loading && <p className="loading">Processing...</p>}
-
-      <ResultPanel result={result} />
-      <ExportPanel result={result} />
+      <Footer />
     </div>
   );
 }

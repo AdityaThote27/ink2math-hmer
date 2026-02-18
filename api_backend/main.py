@@ -2,25 +2,27 @@ from fastapi import FastAPI, UploadFile, File
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
 from models.schemas import EquationRequest
+
 from core.parser import parse_expression
 from core.solver import solve_expression
 from core.steps_generator import generate_steps
 from core.utils import clean_input
 from core.voice_normalizer import normalize_speech
+
 from recognition.voice_asr import VoiceASR
+
 from exports.pdf_export import generate_pdf
 from exports.docx_export import generate_docx
 from exports.braille_export import to_braille
-from sympy import Poly, symbols, latex
-import os
-import shutil
 from exports.voice_export import generate_voice_output, generate_steps_voice_output
 
+from sympy import Poly, symbols, latex
 
+import os
+import shutil
 
 app = FastAPI()
 
-# -------------------- LOAD VOICE MODEL --------------------
 voice_model = VoiceASR()
 
 # -------------------- CORS --------------------
@@ -32,9 +34,9 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Ensure static folder exists
 if not os.path.exists("static"):
     os.makedirs("static")
+
 
 # -------------------- HOME --------------------
 @app.get("/")
@@ -42,34 +44,33 @@ def home():
     return {"message": "Ink2Math Backend Running"}
 
 
-# ==================== TEXT SOLVE ====================
+# ================= TEXT SOLVE =================
 @app.post("/solve")
 def solve_equation(req: EquationRequest):
     try:
         cleaned = clean_input(req.expression)
 
-        # -------- Equation-aware parsing --------
         if "=" in cleaned:
             left_str, right_str = cleaned.split("=")
-
             left_expr = parse_expression(left_str.strip())
             right_expr = parse_expression(right_str.strip())
 
-            parsed_expr = left_expr - right_expr  # solving form
-            latex_expr = f"{latex(left_expr)} = {latex(right_expr)}"  # display form
+            parsed_expr = left_expr - right_expr
+            display_latex = f"{latex(left_expr)} = {latex(right_expr)}"
         else:
             parsed_expr = parse_expression(cleaned)
-            latex_expr = latex(parsed_expr)
+            display_latex = latex(parsed_expr)
 
         solution = solve_expression(parsed_expr)
 
         if isinstance(solution, list):
             clean_solution = ", ".join([str(s) for s in solution])
+            solution_latex = ", ".join([latex(s) for s in solution])
         else:
             clean_solution = str(solution)
+            solution_latex = latex(solution)
 
-        # -------- Equation Type Detection --------
-        x = symbols('x')
+        x = symbols("x")
         try:
             poly = Poly(parsed_expr, x)
             degree = poly.degree()
@@ -89,10 +90,11 @@ def solve_equation(req: EquationRequest):
 
         return {
             "mode": "text",
-            "input": str(req.expression),
+            "input": req.expression,
             "type": equation_type,
             "solution": clean_solution,
-            "latex": latex_expr,
+            "display_latex": display_latex,
+            "solution_latex": solution_latex,
             "steps": steps
         }
 
@@ -100,7 +102,7 @@ def solve_equation(req: EquationRequest):
         return {"error": str(e)}
 
 
-# ==================== VOICE SOLVE ====================
+# ================= VOICE SOLVE =================
 @app.post("/solve/voice")
 async def solve_voice(file: UploadFile = File(...)):
     try:
@@ -113,28 +115,27 @@ async def solve_voice(file: UploadFile = File(...)):
         normalized = normalize_speech(transcript)
         cleaned = clean_input(normalized)
 
-        # -------- Equation-aware parsing --------
         if "=" in cleaned:
             left_str, right_str = cleaned.split("=")
-
             left_expr = parse_expression(left_str.strip())
             right_expr = parse_expression(right_str.strip())
 
             parsed_expr = left_expr - right_expr
-            latex_expr = f"{latex(left_expr)} = {latex(right_expr)}"
+            display_latex = f"{latex(left_expr)} = {latex(right_expr)}"
         else:
             parsed_expr = parse_expression(cleaned)
-            latex_expr = latex(parsed_expr)
+            display_latex = latex(parsed_expr)
 
         solution = solve_expression(parsed_expr)
 
         if isinstance(solution, list):
             clean_solution = ", ".join([str(s) for s in solution])
+            solution_latex = ", ".join([latex(s) for s in solution])
         else:
             clean_solution = str(solution)
+            solution_latex = latex(solution)
 
-        # -------- Equation Type Detection --------
-        x = symbols('x')
+        x = symbols("x")
         try:
             poly = Poly(parsed_expr, x)
             degree = poly.degree()
@@ -160,7 +161,8 @@ async def solve_voice(file: UploadFile = File(...)):
             "normalized_expression": normalized,
             "type": equation_type,
             "solution": clean_solution,
-            "latex": latex_expr,
+            "display_latex": display_latex,
+            "solution_latex": solution_latex,
             "steps": steps
         }
 
@@ -168,7 +170,7 @@ async def solve_voice(file: UploadFile = File(...)):
         return {"error": str(e)}
 
 
-# ==================== EXPORT PDF ====================
+# ================= EXPORT PDF =================
 @app.post("/export/pdf")
 def export_pdf(req: EquationRequest):
     cleaned = clean_input(req.expression)
@@ -184,7 +186,7 @@ def export_pdf(req: EquationRequest):
     return FileResponse(filepath, media_type="application/pdf", filename=filename)
 
 
-# ==================== EXPORT DOCX ====================
+# ================= EXPORT DOCX =================
 @app.post("/export/docx")
 def export_docx(req: EquationRequest):
     cleaned = clean_input(req.expression)
@@ -204,7 +206,7 @@ def export_docx(req: EquationRequest):
     )
 
 
-# ==================== EXPORT BRAILLE ====================
+# ================= EXPORT BRAILLE =================
 @app.post("/export/braille")
 def export_braille(req: EquationRequest):
     cleaned = clean_input(req.expression)
@@ -222,28 +224,16 @@ def export_braille(req: EquationRequest):
 
     return FileResponse(filepath, media_type="text/plain", filename=filename)
 
-# -------------------- EXPORT VOICE --------------------
+
+# ================= EXPORT VOICE =================
 @app.post("/export/voice")
 def export_voice(req: EquationRequest):
     cleaned = clean_input(req.expression)
-
-    if "=" in cleaned:
-        left_str, right_str = cleaned.split("=")
-        left_expr = parse_expression(left_str.strip())
-        right_expr = parse_expression(right_str.strip())
-        parsed_expr = left_expr - right_expr
-    else:
-        parsed_expr = parse_expression(cleaned)
-
+    parsed_expr = parse_expression(cleaned)
     solution = solve_expression(parsed_expr)
 
-    if isinstance(solution, list):
-        solution_text = ", ".join([str(s) for s in solution])
-    else:
-        solution_text = str(solution)
-
+    solution_text = str(solution)
     speech_text = f"The solution is {solution_text}. Please check the steps for explanation."
-
 
     filepath = generate_voice_output(speech_text)
 
@@ -253,33 +243,19 @@ def export_voice(req: EquationRequest):
         filename="solution_voice.mp3"
     )
 
-# -------------------- EXPORT VOICE WITH STEPS --------------------
+
+# ================= EXPORT VOICE WITH STEPS =================
 @app.post("/export/voice/steps")
 def export_voice_steps(req: EquationRequest):
     cleaned = clean_input(req.expression)
-
-    # Equation-aware parsing
-    if "=" in cleaned:
-        left_str, right_str = cleaned.split("=")
-        left_expr = parse_expression(left_str.strip())
-        right_expr = parse_expression(right_str.strip())
-        parsed_expr = left_expr - right_expr
-        display_equation = cleaned
-    else:
-        parsed_expr = parse_expression(cleaned)
-        display_equation = cleaned
-
+    parsed_expr = parse_expression(cleaned)
     solution = solve_expression(parsed_expr)
-
-    if isinstance(solution, list):
-        solution_text = ", ".join([str(s) for s in solution])
-    else:
-        solution_text = str(solution)
-
     steps = generate_steps(parsed_expr, solution)
 
+    solution_text = str(solution)
+
     filepath = generate_steps_voice_output(
-        display_equation,
+        req.expression,
         steps,
         solution_text
     )

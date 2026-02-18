@@ -1,10 +1,36 @@
-from sympy import symbols, Poly
+from sympy import Poly
 
 def generate_steps(parsed_expr, solution):
     steps = []
     step_number = 1
 
-    x = symbols('x')
+    # 🔍 Detect if expression contains variables
+    has_variable = bool(parsed_expr.free_symbols)
+
+    # ==============================
+    # CASE 1 — PURE ARITHMETIC
+    # ==============================
+    if not has_variable:
+        steps.append({
+            "step": step_number,
+            "title": "Evaluate Expression",
+            "description": f"Compute the value of {str(parsed_expr)}."
+        })
+        step_number += 1
+
+        steps.append({
+            "step": step_number,
+            "title": "Final Answer",
+            "description": f"{str(solution)}"
+        })
+
+        return steps
+
+    # ==============================
+    # CASE 2 — EQUATION
+    # ==============================
+
+    variable = list(parsed_expr.free_symbols)[0]
 
     # STEP 1 — Standard Form
     steps.append({
@@ -14,9 +40,9 @@ def generate_steps(parsed_expr, solution):
     })
     step_number += 1
 
-    # Detect polynomial degree
+    # Detect polynomial degree safely
     try:
-        poly = Poly(parsed_expr, x)
+        poly = Poly(parsed_expr, variable)
         degree = poly.degree()
     except Exception:
         degree = None
@@ -32,8 +58,8 @@ def generate_steps(parsed_expr, solution):
 
         steps.append({
             "step": step_number,
-            "title": "Isolate Variable",
-            "description": "Rearrange equation to isolate x."
+            "title": "Solve for Variable",
+            "description": f"Isolate {variable}."
         })
         step_number += 1
 
@@ -56,18 +82,18 @@ def generate_steps(parsed_expr, solution):
         steps.append({
             "step": step_number,
             "title": "Simplification",
-            "description": "Simplify the expression if possible."
+            "description": "Simplify the equation if possible."
         })
         step_number += 1
 
     # FINAL STEP — Format Solution
     if isinstance(solution, list):
         if len(solution) == 1:
-            sol_text = f"x = {str(solution[0])}"
+            sol_text = f"{variable} = {str(solution[0])}"
         else:
-            sol_text = "Solutions: " + ", ".join([f"x = {str(s)}" for s in solution])
+            sol_text = ", ".join([f"{variable} = {str(s)}" for s in solution])
     else:
-        sol_text = f"x = {str(solution)}"
+        sol_text = f"{variable} = {str(solution)}"
 
     steps.append({
         "step": step_number,

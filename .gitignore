@@ -1,34 +1,27 @@
-# ========================
-# Python
-# ========================
-venv/
-__pycache__/
-*.pyc
-*.pyo
-*.pyd
-.env
-
-# ========================
-# Node
-# ========================
-frontend/node_modules/
-
-# ========================
 # ML Models
-# ========================
-*.pt
 *.pth
-digit_transformer.pth
-digit_transformer_clean/
+*.pt
 
-# ========================
 # Datasets
-# ========================
 data/
 ml/dataset/
+digit_transformer_clean/data/
 
-# ========================
-# OS Files
-# ========================
-.DS_Store
-Thumbs.db
+# Large artifacts
+digit_transformer_clean/*.pth
+digit_transformer.pth
+
+# Python
+venv/
+__pycache__/
+
+# Node
+node_modules/
+dist/
+
+# Static generated exports
+api_backend/static/*.pdf
+api_backend/static/*.docx
+api_backend/static/*.txt
+api_backend/static/*.mp3
+api_backend/static/temp_*

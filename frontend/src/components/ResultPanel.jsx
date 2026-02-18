@@ -5,22 +5,44 @@ function ResultPanel({ result }) {
 
   return (
     <div className="card">
-      <h2>Equation Type</h2>
-      <p>{result.type}</p>
+      {/* Equation Type */}
+      {result.type && (
+        <>
+          <h2>Equation Type</h2>
+          <p>{result.type}</p>
+        </>
+      )}
 
-      <h2>Solution</h2>
-      <BlockMath math={`x = ${result.solution}`} />
+      {/* Original Equation */}
+      {result.display_latex && (
+        <>
+          <h2>Given Equation</h2>
+          <BlockMath math={result.display_latex} />
+        </>
+      )}
 
-      <h2>Step-by-Step Explanation</h2>
+      {/* Final Solution */}
+      {result.solution_latex && (
+        <>
+          <h2>Solution</h2>
+          <BlockMath math={`x = ${result.solution_latex}`} />
+        </>
+      )}
 
-      {result.steps.map((step, index) => (
-        <div key={index} className="step">
-          <strong>
-            Step {step.step}: {step.title}
-          </strong>
-          <p>{step.description}</p>
-        </div>
-      ))}
+      {/* Steps */}
+      {Array.isArray(result.steps) && result.steps.length > 0 && (
+        <>
+          <h2>Step-by-Step Explanation</h2>
+          {result.steps.map((step, index) => (
+            <div key={index} className="step">
+              <strong>
+                Step {step.step}: {step.title}
+              </strong>
+              <p>{step.description}</p>
+            </div>
+          ))}
+        </>
+      )}
     </div>
   );
 }
