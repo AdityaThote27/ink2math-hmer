@@ -7,8 +7,6 @@ import ImageUploadPanel from "./components/ImageUploadPanel";
 import DrawCanvasPanel from "./components/DrawCanvasPanel";
 import ResultPanel from "./components/ResultPanel";
 import ExportPanel from "./components/ExportPanel";
-import MiniAssistant from "./components/MiniAssistant";
-
 
 import HeroSection from "./layout/HeroSection";
 import SolverLayout from "./layout/SolverLayout";
@@ -30,22 +28,44 @@ function App() {
   const mediaRecorderRef = useRef(null);
   const chunksRef = useRef([]);
 
-  const solveEquation = async () => {
-    if (!equation) return;
+  // ========================= SOLVE TEXT =========================
+  const solveEquation = async (customExpression = null) => {
+    const expressionToSolve = customExpression ?? equation;
+    if (!expressionToSolve) return null;
 
     try {
       setLoading(true);
+
       const response = await axios.post(`${BASE_URL}/solve`, {
-        expression: equation,
+        expression: expressionToSolve,
       });
+
       setResult(response.data);
-    } catch {
+
+      document
+        .getElementById("results")
+        ?.scrollIntoView({ behavior: "smooth" });
+
+      return response.data; // 🔥 Needed for MiniAssistant
+
+    } catch (error) {
+      console.error(error);
       alert("Text solve failed.");
+      return null;
     } finally {
       setLoading(false);
     }
   };
 
+  // ========================= TAB CHANGE =========================
+  const handleTabChange = (tab) => {
+    setActiveTab(tab);
+    document
+      .getElementById("solver")
+      ?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  // ========================= VOICE RECORD =========================
   const startRecording = async () => {
     const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
     const mediaRecorder = new MediaRecorder(stream);
@@ -64,13 +84,21 @@ function App() {
 
       try {
         setLoading(true);
+
         const response = await axios.post(
           `${BASE_URL}/solve/voice`,
           formData,
           { headers: { "Content-Type": "multipart/form-data" } }
         );
+
         setResult(response.data);
-      } catch {
+
+        document
+          .getElementById("results")
+          ?.scrollIntoView({ behavior: "smooth" });
+
+      } catch (error) {
+        console.error(error);
         alert("Voice solve failed.");
       } finally {
         setLoading(false);
@@ -82,42 +110,60 @@ function App() {
   };
 
   const stopRecording = () => {
-    mediaRecorderRef.current.stop();
+    mediaRecorderRef.current?.stop();
     setRecording(false);
   };
 
+  // ========================= IMAGE SOLVE =========================
   const solveFromImage = async (file) => {
     const formData = new FormData();
     formData.append("file", file);
 
     try {
       setLoading(true);
+
       const response = await axios.post(
         `${BASE_URL}/solve/image`,
         formData,
         { headers: { "Content-Type": "multipart/form-data" } }
       );
+
       setResult(response.data);
-    } catch {
+
+      document
+        .getElementById("results")
+        ?.scrollIntoView({ behavior: "smooth" });
+
+    } catch (error) {
+      console.error(error);
       alert("Image solve failed.");
     } finally {
       setLoading(false);
     }
   };
 
+  // ========================= DRAW SOLVE =========================
   const solveFromDrawing = async (blob) => {
     const formData = new FormData();
     formData.append("file", blob);
 
     try {
       setLoading(true);
+
       const response = await axios.post(
         `${BASE_URL}/solve/draw`,
         formData,
         { headers: { "Content-Type": "multipart/form-data" } }
       );
+
       setResult(response.data);
-    } catch {
+
+      document
+        .getElementById("results")
+        ?.scrollIntoView({ behavior: "smooth" });
+
+    } catch (error) {
+      console.error(error);
       alert("Draw solve failed.");
     } finally {
       setLoading(false);
@@ -126,43 +172,48 @@ function App() {
 
   return (
     <div className="app-wrapper">
-      <HeroSection />
 
-      <MiniAssistant
-        setActiveTab={setActiveTab}
+      {/* ================= HERO (Mini inside Hero) ================= */}
+      <HeroSection
+        setActiveTab={handleTabChange}
         solveEquation={solveEquation}
-        result={result}
-      />
-
-
-      <SolverLayout
-        activeTab={activeTab}
-        setActiveTab={setActiveTab}
-        equation={equation}
         setEquation={setEquation}
-        solveEquation={solveEquation}
-        recording={recording}
-        startRecording={startRecording}
-        stopRecording={stopRecording}
-        solveFromImage={solveFromImage}
-        solveFromDrawing={solveFromDrawing}
-        loading={loading}
-        InputPanel={InputPanel}
-        VoiceControls={VoiceControls}
-        ImageUploadPanel={ImageUploadPanel}
-        DrawCanvasPanel={DrawCanvasPanel}
       />
 
-      <ResultsLayout result={result} ResultPanel={ResultPanel} />
-      <ExportLayout result={result} ExportPanel={ExportPanel} />
+      {/* ================= SOLVER ================= */}
+      <div id="solver">
+        <SolverLayout
+          activeTab={activeTab}
+          setActiveTab={handleTabChange}
+          equation={equation}
+          setEquation={setEquation}
+          solveEquation={solveEquation}
+          recording={recording}
+          startRecording={startRecording}
+          stopRecording={stopRecording}
+          solveFromImage={solveFromImage}
+          solveFromDrawing={solveFromDrawing}
+          loading={loading}
+          InputPanel={InputPanel}
+          VoiceControls={VoiceControls}
+          ImageUploadPanel={ImageUploadPanel}
+          DrawCanvasPanel={DrawCanvasPanel}
+        />
+      </div>
 
-      <MiniAssistant
-        setActiveTab={setActiveTab}
-        onSolve={solveEquation}
+      {/* ================= RESULTS ================= */}
+      <div id="results">
+        <ResultsLayout
+          result={result}
+          ResultPanel={ResultPanel}
+        />
+      </div>
+
+      {/* ================= EXPORT ================= */}
+      <ExportLayout
         result={result}
+        ExportPanel={ExportPanel}
       />
-
-
 
       <Footer />
     </div>

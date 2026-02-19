@@ -1,3 +1,5 @@
+import MiniAssistant from "../components/MiniAssistant";
+
 function HeroSection({
   badge = "AI-Powered Math Assistant",
   title = "Ink2Math",
@@ -8,18 +10,21 @@ function HeroSection({
     { label: "Input Methods", value: "4+" },
     { label: "Accessibility", value: "100%" },
   ],
+  setActiveTab,
+  solveEquation,   // ✅ renamed properly
+  setEquation,
 }) {
+
   const handleCTA = () => {
-    const section = document.getElementById("solver");
-    if (section) {
-      section.scrollIntoView({ behavior: "smooth" });
-    }
+    document.getElementById("solver")?.scrollIntoView({
+      behavior: "smooth",
+    });
   };
 
   return (
     <header className="hero-section">
       <div className="hero-container">
-        
+
         {/* LEFT SIDE */}
         <div className="hero-left">
           <div className="badge">{badge}</div>
@@ -35,7 +40,6 @@ function HeroSection({
             {ctaLabel} →
           </button>
 
-          {/* Stats */}
           <div className="hero-stats">
             {stats.map((stat) => (
               <div key={stat.label} className="stat-item">
@@ -57,13 +61,20 @@ function HeroSection({
             </div>
 
             <p className="hero-card-text">
-              Advanced AI recognizes handwritten equations, typed problems, and
-              voice descriptions — delivering clear step-by-step solutions.
+              Advanced AI recognizes handwritten equations, typed problems,
+              and voice commands — delivering step-by-step solutions.
             </p>
           </div>
         </div>
 
       </div>
+
+      {/* 🤖 MINI ASSISTANT (floating) */}
+      <MiniAssistant
+        setActiveTab={setActiveTab}
+        solveEquation={solveEquation}   
+        setEquation={setEquation}
+      />
     </header>
   );
 }
