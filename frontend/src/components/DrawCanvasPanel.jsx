@@ -1,37 +1,60 @@
-import { useRef, useState } from "react";
-import axios from "axios";
+import { useRef, useState, useEffect } from "react";
 
-const BASE_URL = "http://127.0.0.1:8000";
-
-function DrawCanvasPanel({ setResult, setLoading }) {
+function DrawCanvasPanel({ onSolveDraw, loading }) {
   const canvasRef = useRef(null);
-  const [drawing, setDrawing] = useState(false);
+  const [isDrawing, setIsDrawing] = useState(false);
 
-  const startDrawing = () => setDrawing(true);
-  const stopDrawing = () => setDrawing(false);
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    const ctx = canvas.getContext("2d");
+
+    ctx.lineWidth = 6;
+    ctx.lineCap = "round";
+    ctx.lineJoin = "round";
+    ctx.strokeStyle = "black";
+  }, []);
+
+  const getPosition = (e) => {
+    const canvas = canvasRef.current;
+    const rect = canvas.getBoundingClientRect();
+    return {
+      x: e.clientX - rect.left,
+      y: e.clientY - rect.top,
+    };
+  };
+
+  const startDrawing = (e) => {
+    const canvas = canvasRef.current;
+    const ctx = canvas.getContext("2d");
+
+    const { x, y } = getPosition(e);
+
+    ctx.beginPath();
+    ctx.moveTo(x, y);
+
+    setIsDrawing(true);
+  };
 
   const draw = (e) => {
-    if (!drawing) return;
+    if (!isDrawing) return;
 
     const canvas = canvasRef.current;
     const ctx = canvas.getContext("2d");
 
-    ctx.lineWidth = 3;
-    ctx.lineCap = "round";
-    ctx.strokeStyle = "black";
+    const { x, y } = getPosition(e);
 
-    const rect = canvas.getBoundingClientRect();
-
-    ctx.lineTo(
-      e.clientX - rect.left,
-      e.clientY - rect.top
-    );
+    ctx.lineTo(x, y);
     ctx.stroke();
-    ctx.beginPath();
-    ctx.moveTo(
-      e.clientX - rect.left,
-      e.clientY - rect.top
-    );
+  };
+
+  const stopDrawing = () => {
+    if (!isDrawing) return;
+
+    const canvas = canvasRef.current;
+    const ctx = canvas.getContext("2d");
+
+    ctx.closePath();
+    setIsDrawing(false);
   };
 
   const clearCanvas = () => {
@@ -40,31 +63,12 @@ function DrawCanvasPanel({ setResult, setLoading }) {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
   };
 
-  const submitDrawing = async () => {
+  const handleSolve = () => {
     const canvas = canvasRef.current;
-    const dataURL = canvas.toDataURL("image/png");
 
-    const blob = await (await fetch(dataURL)).blob();
-
-    const formData = new FormData();
-    formData.append("file", blob);
-
-    try {
-      setLoading(true);
-
-      const response = await axios.post(
-        `${BASE_URL}/solve/draw`,  // ⚠ adjust if needed
-        formData,
-        { headers: { "Content-Type": "multipart/form-data" } }
-      );
-
-      setResult(response.data);
-    } catch (error) {
-      alert("Draw solve failed.");
-      console.error(error);
-    } finally {
-      setLoading(false);
-    }
+    canvas.toBlob((blob) => {
+      onSolveDraw(blob);
+    });
   };
 
   return (
@@ -73,18 +77,23 @@ function DrawCanvasPanel({ setResult, setLoading }) {
 
       <canvas
         ref={canvasRef}
-        width={500}
-        height={200}
-        style={{ border: "1px solid #ccc" }}
+        width={600}
+        height={250}
+        style={{
+          border: "1px solid #ccc",
+          background: "white",
+          cursor: "crosshair",
+        }}
         onMouseDown={startDrawing}
-        onMouseUp={stopDrawing}
         onMouseMove={draw}
+        onMouseUp={stopDrawing}
+        onMouseLeave={stopDrawing}
       />
 
       <div style={{ marginTop: "10px" }}>
         <button onClick={clearCanvas}>Clear</button>
-        <button onClick={submitDrawing}>
-          ✍ Solve Drawing
+        <button onClick={handleSolve} disabled={loading}>
+          {loading ? "Processing..." : "✍ Solve Drawing"}
         </button>
       </div>
     </div>

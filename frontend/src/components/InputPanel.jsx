@@ -7,7 +7,7 @@ function InputPanel({ equation, setEquation, onSolve }) {
         value={equation}
         onChange={(e) => setEquation(e.target.value)}
       />
-      <button onClick={onSolve}>Solve</button>
+      <button onClick={() => onSolve()}>Solve</button>
     </div>
   );
 }

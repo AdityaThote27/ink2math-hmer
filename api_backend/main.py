@@ -10,6 +10,7 @@ from core.utils import clean_input
 from core.voice_normalizer import normalize_speech
 
 from recognition.voice_asr import VoiceASR
+from recognition.image_ocr import recognize_math_expression
 
 from exports.pdf_export import generate_pdf
 from exports.docx_export import generate_docx
@@ -17,12 +18,13 @@ from exports.braille_export import to_braille
 from exports.voice_export import generate_voice_output, generate_steps_voice_output
 
 from sympy import Poly, symbols, latex
+from sympy.parsing.sympy_parser import parse_expr
 
 import os
 import shutil
+import re
 
 app = FastAPI()
-
 voice_model = VoiceASR()
 
 # -------------------- CORS --------------------
@@ -36,6 +38,59 @@ app.add_middleware(
 
 if not os.path.exists("static"):
     os.makedirs("static")
+
+
+# ================= OCR CLEANING =================
+def clean_recognized_text(text: str) -> str:
+    if not text:
+        return ""
+
+    text = text.replace("\n", " ")
+    text = text.replace(".", "")
+    text = text.strip()
+
+    # Common OCR math corrections
+    replacements = {
+        "t": "+",
+        "T": "+",
+        "l": "1",
+        "O": "0",
+        "o": "0",
+        "—": "-",
+        "–": "-",
+        "×": "*",
+        "÷": "/"
+    }
+
+    for wrong, correct in replacements.items():
+        text = text.replace(wrong, correct)
+
+    # Convert "5 x" → "5*x"
+    text = re.sub(r'(\d)\s+([a-zA-Z])', r'\1*\2', text)
+
+    # Remove extra spaces
+    text = re.sub(r'\s+', ' ', text)
+
+    # Replace ^ with **
+    text = text.replace("^", "**")
+
+    return text.strip()
+
+
+# ================= EQUATION RECOVERY =================
+def recover_equation_if_missing(text: str) -> str:
+    if "=" not in text:
+        numbers = re.findall(r'\d+', text)
+        variables = re.findall(r'[a-zA-Z]', text)
+
+        if variables and len(numbers) >= 2:
+            last_number = numbers[-1]
+            index = text.rfind(last_number)
+            lhs = text[:index]
+            rhs = text[index:]
+            text = lhs + "=" + rhs
+
+    return text
 
 
 # -------------------- HOME --------------------
@@ -54,7 +109,6 @@ def solve_equation(req: EquationRequest):
             left_str, right_str = cleaned.split("=")
             left_expr = parse_expression(left_str.strip())
             right_expr = parse_expression(right_str.strip())
-
             parsed_expr = left_expr - right_expr
             display_latex = f"{latex(left_expr)} = {latex(right_expr)}"
         else:
@@ -62,39 +116,14 @@ def solve_equation(req: EquationRequest):
             display_latex = latex(parsed_expr)
 
         solution = solve_expression(parsed_expr)
-
-        if isinstance(solution, list):
-            clean_solution = ", ".join([str(s) for s in solution])
-            solution_latex = ", ".join([latex(s) for s in solution])
-        else:
-            clean_solution = str(solution)
-            solution_latex = latex(solution)
-
-        x = symbols("x")
-        try:
-            poly = Poly(parsed_expr, x)
-            degree = poly.degree()
-        except:
-            degree = None
-
-        if degree == 1:
-            equation_type = "Linear Equation"
-        elif degree == 2:
-            equation_type = "Quadratic Equation"
-        elif parsed_expr.free_symbols:
-            equation_type = "General Expression"
-        else:
-            equation_type = "Arithmetic Expression"
-
         steps = generate_steps(parsed_expr, solution)
 
         return {
             "mode": "text",
             "input": req.expression,
-            "type": equation_type,
-            "solution": clean_solution,
+            "solution": str(solution),
             "display_latex": display_latex,
-            "solution_latex": solution_latex,
+            "solution_latex": latex(solution),
             "steps": steps
         }
 
@@ -115,42 +144,8 @@ async def solve_voice(file: UploadFile = File(...)):
         normalized = normalize_speech(transcript)
         cleaned = clean_input(normalized)
 
-        if "=" in cleaned:
-            left_str, right_str = cleaned.split("=")
-            left_expr = parse_expression(left_str.strip())
-            right_expr = parse_expression(right_str.strip())
-
-            parsed_expr = left_expr - right_expr
-            display_latex = f"{latex(left_expr)} = {latex(right_expr)}"
-        else:
-            parsed_expr = parse_expression(cleaned)
-            display_latex = latex(parsed_expr)
-
+        parsed_expr = parse_expression(cleaned)
         solution = solve_expression(parsed_expr)
-
-        if isinstance(solution, list):
-            clean_solution = ", ".join([str(s) for s in solution])
-            solution_latex = ", ".join([latex(s) for s in solution])
-        else:
-            clean_solution = str(solution)
-            solution_latex = latex(solution)
-
-        x = symbols("x")
-        try:
-            poly = Poly(parsed_expr, x)
-            degree = poly.degree()
-        except:
-            degree = None
-
-        if degree == 1:
-            equation_type = "Linear Equation"
-        elif degree == 2:
-            equation_type = "Quadratic Equation"
-        elif parsed_expr.free_symbols:
-            equation_type = "General Expression"
-        else:
-            equation_type = "Arithmetic Expression"
-
         steps = generate_steps(parsed_expr, solution)
 
         os.remove(temp_audio_path)
@@ -158,11 +153,71 @@ async def solve_voice(file: UploadFile = File(...)):
         return {
             "mode": "voice",
             "transcript": transcript,
-            "normalized_expression": normalized,
-            "type": equation_type,
-            "solution": clean_solution,
+            "solution": str(solution),
+            "display_latex": latex(parsed_expr),
+            "solution_latex": latex(solution),
+            "steps": steps
+        }
+
+    except Exception as e:
+        return {"error": str(e)}
+
+
+# ================= IMAGE SOLVE =================
+@app.post("/solve/image")
+async def solve_image(file: UploadFile = File(...)):
+    try:
+        temp_image_path = f"static/temp_{file.filename}"
+
+        with open(temp_image_path, "wb") as buffer:
+            shutil.copyfileobj(file.file, buffer)
+
+        recognized_text = recognize_math_expression(temp_image_path)
+
+        if not recognized_text:
+            os.remove(temp_image_path)
+            return {"error": "Could not recognize expression"}
+
+        cleaned_text = clean_recognized_text(recognized_text)
+        cleaned_text = recover_equation_if_missing(cleaned_text)
+
+        # -------- Parse --------
+        try:
+            if "=" in cleaned_text:
+                left_str, right_str = cleaned_text.split("=")
+                left_expr = parse_expr(left_str.strip())
+                right_expr = parse_expr(right_str.strip())
+                parsed_expr = left_expr - right_expr
+                display_latex = f"{latex(left_expr)} = {latex(right_expr)}"
+            else:
+                parsed_expr = parse_expr(cleaned_text)
+                display_latex = latex(parsed_expr)
+
+        except Exception as e:
+            os.remove(temp_image_path)
+            return {
+                "recognized_text_raw": recognized_text,
+                "recognized_text_cleaned": cleaned_text,
+                "error": f"Parsing Error: {str(e)}"
+            }
+
+        # -------- Solve Using Core Solver --------
+        try:
+            solution = solve_expression(parsed_expr)
+            steps = generate_steps(parsed_expr, solution)
+        except Exception as e:
+            os.remove(temp_image_path)
+            return {"error": f"Solving Error: {str(e)}"}
+
+        os.remove(temp_image_path)
+
+        return {
+            "mode": "image",
+            "recognized_text_raw": recognized_text,
+            "recognized_text_cleaned": cleaned_text,
+            "solution": str(solution),
             "display_latex": display_latex,
-            "solution_latex": solution_latex,
+            "solution_latex": latex(solution),
             "steps": steps
         }
 
@@ -224,44 +279,66 @@ def export_braille(req: EquationRequest):
 
     return FileResponse(filepath, media_type="text/plain", filename=filename)
 
+# ================= DRAW SOLVE =================
+@app.post("/solve/draw")
+async def solve_draw(file: UploadFile = File(...)):
+    try:
+        temp_image_path = "static/temp_draw.png"
 
-# ================= EXPORT VOICE =================
-@app.post("/export/voice")
-def export_voice(req: EquationRequest):
-    cleaned = clean_input(req.expression)
-    parsed_expr = parse_expression(cleaned)
-    solution = solve_expression(parsed_expr)
+        with open(temp_image_path, "wb") as buffer:
+            shutil.copyfileobj(file.file, buffer)
 
-    solution_text = str(solution)
-    speech_text = f"The solution is {solution_text}. Please check the steps for explanation."
+        recognized_text = recognize_math_expression(temp_image_path)
 
-    filepath = generate_voice_output(speech_text)
+        if not recognized_text:
+            os.remove(temp_image_path)
+            return {"error": "Could not recognize drawing"}
 
-    return FileResponse(
-        filepath,
-        media_type="audio/mpeg",
-        filename="solution_voice.mp3"
-    )
+        cleaned_text = clean_recognized_text(recognized_text)
+        cleaned_text = recover_equation_if_missing(cleaned_text)
 
+        # 🔥 PARSING WITH SAFE ERROR HANDLING
+        try:
+            if "=" in cleaned_text:
+                left_str, right_str = cleaned_text.split("=")
+                left_expr = parse_expr(left_str.strip())
+                right_expr = parse_expr(right_str.strip())
+                parsed_expr = left_expr - right_expr
+                display_latex = f"{latex(left_expr)} = {latex(right_expr)}"
+            else:
+                parsed_expr = parse_expr(cleaned_text)
+                display_latex = latex(parsed_expr)
+        except Exception as parse_error:
+            os.remove(temp_image_path)
+            return {
+                "error": str(parse_error),
+                "recognized_text_raw": recognized_text,
+                "recognized_text_cleaned": cleaned_text
+            }
 
-# ================= EXPORT VOICE WITH STEPS =================
-@app.post("/export/voice/steps")
-def export_voice_steps(req: EquationRequest):
-    cleaned = clean_input(req.expression)
-    parsed_expr = parse_expression(cleaned)
-    solution = solve_expression(parsed_expr)
-    steps = generate_steps(parsed_expr, solution)
+        # 🔥 SOLVE
+        try:
+            solution = solve_expression(parsed_expr)
+            steps = generate_steps(parsed_expr, solution)
+        except Exception as solve_error:
+            os.remove(temp_image_path)
+            return {
+                "error": str(solve_error),
+                "recognized_text_raw": recognized_text,
+                "recognized_text_cleaned": cleaned_text
+            }
 
-    solution_text = str(solution)
+        os.remove(temp_image_path)
 
-    filepath = generate_steps_voice_output(
-        req.expression,
-        steps,
-        solution_text
-    )
+        return {
+            "mode": "draw",
+            "recognized_text_raw": recognized_text,
+            "recognized_text_cleaned": cleaned_text,
+            "solution": str(solution),
+            "display_latex": display_latex,
+            "solution_latex": latex(solution),
+            "steps": steps
+        }
 
-    return FileResponse(
-        filepath,
-        media_type="audio/mpeg",
-        filename="solution_steps_voice.mp3"
-    )
+    except Exception as e:
+        return {"error": str(e)}

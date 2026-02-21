@@ -61,12 +61,23 @@ function SolverLayout({
       )}
 
       {activeTab === "image" && (
-        <ImageUploadPanel onSolveImage={solveFromImage} />
+        <ImageUploadPanel
+          solveFromImage={solveFromImage}
+          loading={loading}
+        />
       )}
 
+
+
       {activeTab === "draw" && (
-        <DrawCanvasPanel onSolveDraw={solveFromDrawing} />
+        <DrawCanvasPanel
+          onSolveDraw={solveFromDrawing}
+          loading={loading}
+        />
+
       )}
+
+
 
       {loading && <div className="loading">Processing...</div>}
     </section>
